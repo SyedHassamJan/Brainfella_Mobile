@@ -1,0 +1,73 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
+@import "nativewind/theme";
+
+/*
+ * BrainHealth design tokens. The visual goal is calm: soft, low-contrast-noise
+ * colors, deep blue-grey text instead of black, warm (never red) support
+ * surfaces, and generous rounding.
+ *
+ * NativeWind v5 needs every token declared twice: in @theme (so Tailwind
+ * generates the utility classes) and in :root (runtime defaults, the LIGHT
+ * values). The DARK values live in src/theme/tokens.ts and are applied at
+ * runtime with VariableContextProvider. Keep the two in sync.
+ */
+@theme {
+  --color-canvas: #f5f7f4;
+  --color-surface: #ffffff;
+  --color-sunken: #eef2ef;
+  --color-line: #e1e8e4;
+
+  --color-ink: #26363d;
+  --color-ink-soft: #5f7278;
+  --color-ink-faint: #94a4a8;
+
+  --color-primary: #5b9a90;
+  --color-primary-strong: #467f76;
+  --color-primary-soft: #e2f0ed;
+  --color-primary-ink: #ffffff;
+
+  --color-lavender: #9a8fcb;
+  --color-lavender-soft: #eeebf8;
+  --color-peach: #e9b79a;
+  --color-peach-soft: #fbefe6;
+  --color-rose: #c58585;
+  --color-rose-soft: #f7e6e4;
+  --color-sage: #7fb08a;
+  --color-sage-soft: #e6f2e8;
+
+  --color-support: #fbf0ea;
+  --color-support-line: #f1d9cc;
+  --color-support-ink: #7a4b3c;
+}
+
+:root {
+  --color-canvas: #f5f7f4;
+  --color-surface: #ffffff;
+  --color-sunken: #eef2ef;
+  --color-line: #e1e8e4;
+
+  --color-ink: #26363d;
+  --color-ink-soft: #5f7278;
+  --color-ink-faint: #94a4a8;
+
+  --color-primary: #5b9a90;
+  --color-primary-strong: #467f76;
+  --color-primary-soft: #e2f0ed;
+  --color-primary-ink: #ffffff;
+
+  --color-lavender: #9a8fcb;
+  --color-lavender-soft: #eeebf8;
+  --color-peach: #e9b79a;
+  --color-peach-soft: #fbefe6;
+  --color-rose: #c58585;
+  --color-rose-soft: #f7e6e4;
+  --color-sage: #7fb08a;
+  --color-sage-soft: #e6f2e8;
+
+  --color-support: #fbf0ea;
+  --color-support-line: #f1d9cc;
+  --color-support-ink: #7a4b3c;
+}
