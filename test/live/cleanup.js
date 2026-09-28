@@ -18,6 +18,9 @@ const { PrismaClient } = require(path.join(backend, 'node_modules/@prisma/client
       journals: (await prisma.journalEntry.deleteMany({ where: { userId: { in: ids } } })).count,
       moods: (await prisma.moodLog.deleteMany({ where: { userId: { in: ids } } })).count,
       notifications: (await prisma.notification.deleteMany({ where: { userId: { in: ids } } })).count,
+      questionnaireResponses: (await prisma.questionnaireResponse.deleteMany({ where: { userId: { in: ids } } })).count,
+      screeningSignals: (await prisma.screeningSignal.deleteMany({ where: { userId: { in: ids } } })).count,
+      riskAssessments: (await prisma.riskAssessment.deleteMany({ where: { userId: { in: ids } } })).count,
       patientProfiles: (await prisma.patientProfile.deleteMany({ where: { userId: { in: ids } } })).count,
       users: (await prisma.user.deleteMany({ where: { id: { in: ids } } })).count,
     };
