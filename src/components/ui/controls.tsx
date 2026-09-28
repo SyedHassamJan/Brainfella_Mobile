@@ -43,9 +43,9 @@ export function Chip({
 }
 
 /** Read-only label pill (status, category, emotion). */
-export function Badge({ label, tone = 'primary' }: { label: string; tone?: 'primary' | 'lavender' | 'peach' | 'sage' | 'neutral' }) {
-  const bg = { primary: 'bg-primary-soft', lavender: 'bg-lavender-soft', peach: 'bg-peach-soft', sage: 'bg-sage-soft', neutral: 'bg-sunken' }[tone];
-  const fg = { primary: 'text-primary-strong', lavender: 'text-ink-soft', peach: 'text-support-ink', sage: 'text-ink-soft', neutral: 'text-ink-soft' }[tone];
+export function Badge({ label, tone = 'primary' }: { label: string; tone?: 'primary' | 'lavender' | 'peach' | 'sage' | 'rose' | 'neutral' }) {
+  const bg = { primary: 'bg-primary-soft', lavender: 'bg-lavender-soft', peach: 'bg-peach-soft', sage: 'bg-sage-soft', rose: 'bg-rose-soft', neutral: 'bg-sunken' }[tone];
+  const fg = { primary: 'text-primary-strong', lavender: 'text-ink-soft', peach: 'text-support-ink', sage: 'text-ink-soft', rose: 'text-ink-soft', neutral: 'text-ink-soft' }[tone];
   return (
     <View className={cn('self-start rounded-full px-3 py-1', bg)}>
       <Text variant="label" className={fg}>

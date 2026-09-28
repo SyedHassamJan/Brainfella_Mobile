@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { BookOpen, HeartHandshake, House, MessageCircle, User } from 'lucide-react-native';
+import { Activity, BookOpen, HeartHandshake, House, MessageCircle, User } from 'lucide-react-native';
 
 import { useUnreadCount } from '@/hooks/notifications';
 import { useAppTheme } from '@/theme/ThemeProvider';
@@ -54,6 +54,10 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="care"
         options={{ title: 'Care', tabBarIcon: ({ color }) => <HeartHandshake size={22} color={color} strokeWidth={1.7} /> }}
+      />
+      <Tabs.Screen
+        name="screening"
+        options={{ title: 'Screening', tabBarIcon: ({ color }) => <Activity size={22} color={color} strokeWidth={1.7} /> }}
       />
       <Tabs.Screen
         name="profile"

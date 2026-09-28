@@ -108,3 +108,23 @@ export const emotions: Record<EmotionLabel, { label: string; tint: string }> = {
 export const moodOrder: EmotionLabel[] = ['joy', 'neutral', 'sadness', 'fear', 'anger', 'surprise', 'disgust'];
 
 export const emotionLabel = (e?: EmotionLabel | null) => (e ? emotions[e]?.label ?? 'Calm' : 'Calm');
+
+/** The four risk-indicator categories the fusion layer reports, each with a distinct, calm accent. */
+export const RISK_CONDITIONS = {
+  depressionRisk: { label: 'Depression', color: { light: palette.light.primary, dark: palette.dark.primary } },
+  anxietyRisk: { label: 'Anxiety', color: { light: palette.light.lavender, dark: palette.dark.lavender } },
+  stressRisk: { label: 'Stress', color: { light: palette.light.peach, dark: palette.dark.peach } },
+  ocdRisk: { label: 'OCD symptoms', color: { light: palette.light.rose, dark: palette.dark.rose } },
+} as const;
+
+/**
+ * Display bands for a 0-100 risk indicator, matching the backend's own
+ * `FUSION.levelBounds` (<25 Low, <50 Mild, <75 Moderate, else High). Colors stay
+ * within the calm palette on purpose — nothing on this screen turns alarm-red.
+ */
+export function riskLevel(score: number): { label: string; tone: 'sage' | 'primary' | 'peach' | 'rose' } {
+  if (score < 25) return { label: 'Low', tone: 'sage' };
+  if (score < 50) return { label: 'Mild', tone: 'primary' };
+  if (score < 75) return { label: 'Moderate', tone: 'peach' };
+  return { label: 'High', tone: 'rose' };
+}

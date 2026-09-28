@@ -239,6 +239,129 @@ export interface AppNotification {
   createdAt: string;
 }
 
+// ---- Screening: questionnaires, face/voice/text analysis, fused risk indicator
+export type QuestionnaireType = 'PHQ9' | 'GAD7' | 'OCIR' | 'DASS21';
+
+export interface QuestionnaireDefinition {
+  type: QuestionnaireType;
+  name: string;
+  measures: string;
+  instructions: string;
+  options: { value: number; label: string }[];
+  items: string[];
+}
+
+export interface QuestionnaireResponse {
+  id: string;
+  userId: string;
+  type: QuestionnaireType;
+  answers: number[];
+  score: number;
+  severityLabel: string;
+  subscores?: Record<string, number> | null;
+  createdAt: string;
+  /** Present only on the response to a submit (PHQ-9 item 9 or an equivalent crisis item). */
+  crisisFlag?: boolean;
+  crisisSupport?: string;
+  disclaimer?: string;
+}
+
+export interface TextAnalysisResult {
+  available: boolean;
+  reason?: 'non_english' | 'empty_text' | 'model_unavailable';
+  sentiment: { label: 'positive' | 'neutral' | 'negative'; score: number } | null;
+  emotionalTone: { emotion: EmotionLabel; score: number; scores: Record<string, number> } | null;
+  depressionLanguageScore: number | null;
+  anxietyLanguageScore: number | null;
+  stressLanguageScore: number | null;
+  unavailableSignals: string[];
+  crisisFlag: boolean;
+  crisisSupport?: string;
+  models: Record<string, string>;
+  note: string;
+}
+
+export interface VoiceAnalysisResult {
+  transcript: string;
+  duration: number;
+  language: string;
+  languageProbability: number;
+  speakingRate: number;
+  pauseCount: number;
+  models: Record<string, string>;
+  note: string;
+  textAnalysis: TextAnalysisResult;
+}
+
+export interface FaceAnalysisResult {
+  emotion: string;
+  emotionScores: Record<string, number>;
+  eyeContact: boolean;
+  blinkRate: number | null;
+  headPose: { yaw: number; pitch: number; roll: number };
+  models: Record<string, string>;
+  note: string;
+}
+
+export interface RiskRecommendation {
+  id: string;
+  priority: 'urgent' | 'high' | 'normal';
+  text: string;
+  /** In-app feature this points to, when there is one. */
+  action?: 'helpline' | 'book_therapist' | 'cbt_exercises' | 'questionnaire';
+}
+
+export type RiskSource = 'questionnaire' | 'text' | 'facial';
+export type RiskCondition = 'depression' | 'anxiety' | 'stress' | 'ocd';
+
+export interface RiskSourceContribution {
+  source: RiskSource;
+  /** 0-100 score this source gives this condition. */
+  score: number;
+  /** Weight after renormalizing over the sources actually present. */
+  weight: number;
+  detail: string;
+}
+
+export interface RiskConditionResult {
+  risk: number;
+  level: 'Low' | 'Mild' | 'Moderate' | 'High';
+  confidence: 'high' | 'low';
+  capped: boolean;
+  sources: RiskSourceContribution[];
+}
+
+export interface RiskBreakdown {
+  method: string;
+  weights: { questionnaire: number; text: number; facial: number };
+  noQuestionnaireCap: number;
+  conditions: Partial<Record<RiskCondition, RiskConditionResult>>;
+  questionnairesUsed: { type: QuestionnaireType; score: number; takenAt: string }[];
+  recordedNotScored: {
+    voice?: { speakingRate: number; pauseCount: number; duration: number; language: string };
+    facial?: { eyeContact: boolean; headPose: { yaw: number; pitch: number; roll: number } };
+  };
+  recommendations: RiskRecommendation[];
+}
+
+/** A 0-100 risk indicator per condition; null means "not enough recent input", never a fake 0. */
+export interface RiskAssessment {
+  id: string;
+  userId: string;
+  depressionRisk: number | null;
+  anxietyRisk: number | null;
+  stressRisk: number | null;
+  ocdRisk: number | null;
+  crisisFlag: boolean;
+  confidence: 'low' | 'high';
+  /** Modes that contributed to the numbers ("voice" = its transcript, via text analysis). */
+  inputsUsed: ('questionnaire' | 'text' | 'voice' | 'facial')[];
+  breakdown: RiskBreakdown;
+  computedAt: string;
+  /** Present when this came straight from POST /screening/assess (not from history). */
+  disclaimer?: string;
+}
+
 // ---- API errors (GlobalExceptionFilter shape)
 export interface ApiErrorBody {
   statusCode: number;

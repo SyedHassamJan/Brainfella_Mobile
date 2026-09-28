@@ -37,7 +37,19 @@
       ],
       "expo-secure-store",
       "expo-font",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "BrainHealth uses your camera only for a facial screening capture you choose to take. The photo is sent once for analysis and is never saved."
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "BrainHealth uses your microphone only for a voice screening recording you choose to make. The recording is sent once for analysis and is never saved."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

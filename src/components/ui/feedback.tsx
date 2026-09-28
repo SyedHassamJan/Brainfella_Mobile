@@ -56,10 +56,10 @@ export function LoadingState({ label = 'One moment…' }: { label?: string }) {
   );
 }
 
-export function IconBubble({ icon: Icon, tone = 'primary', size = 44 }: { icon: IconType; tone?: 'primary' | 'lavender' | 'peach' | 'sage'; size?: number }) {
+export function IconBubble({ icon: Icon, tone = 'primary', size = 44 }: { icon: IconType; tone?: 'primary' | 'lavender' | 'peach' | 'sage' | 'rose'; size?: number }) {
   const { colors } = useAppTheme();
-  const bg = { primary: colors.primarySoft, lavender: colors.lavenderSoft, peach: colors.peachSoft, sage: colors.sageSoft }[tone];
-  const fg = { primary: colors.primaryStrong, lavender: colors.lavender, peach: colors.supportInk, sage: colors.sage }[tone];
+  const bg = { primary: colors.primarySoft, lavender: colors.lavenderSoft, peach: colors.peachSoft, sage: colors.sageSoft, rose: colors.roseSoft }[tone];
+  const fg = { primary: colors.primaryStrong, lavender: colors.lavender, peach: colors.supportInk, sage: colors.sage, rose: colors.rose }[tone];
   return (
     <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: bg, alignItems: 'center', justifyContent: 'center' }}>
       <Icon size={size * 0.48} color={fg} strokeWidth={1.7} />
