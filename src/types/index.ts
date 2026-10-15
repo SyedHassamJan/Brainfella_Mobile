@@ -35,6 +35,10 @@ export interface TherapistProfile {
   rating?: number | null;
   totalReviews: number;
   isVerified: boolean;
+  /** International digits only (e.g. 923001234567), for wa.me links. */
+  whatsappNumber?: string | null;
+  /** API path of the approved therapist's photo (e.g. /therapist/<id>/photo), or null. */
+  photoUrl?: string | null;
 }
 
 /** The slim user the app keeps in its persisted auth state. */
@@ -53,6 +57,8 @@ export interface UserProfile {
   profileImage?: string | null;
   phone?: string | null;
   isActive: boolean;
+  /** Set once the guided tour is finished or skipped; it is not shown again. */
+  onboardingCompletedAt?: string | null;
   createdAt: string;
   updatedAt: string;
   patientProfile?: PatientProfile | null;
@@ -116,6 +122,13 @@ export interface MoodLog {
   mood: EmotionLabel;
   intensity: number;
   note?: string | null;
+  /** The note matched the shared crisis check. */
+  isCrisis?: boolean;
+  /** Helpline text, present only when isCrisis. */
+  crisisSupport?: string;
+  /** Tone of the note from the emotion model. Null: no note, or the model was unavailable. Never replaces `mood`. */
+  detectedEmotion?: EmotionLabel | null;
+  emotionScore?: number | null;
   loggedAt: string;
 }
 
@@ -368,4 +381,21 @@ export interface ApiErrorBody {
   timestamp?: string;
   path?: string;
   message: string | string[];
+}
+
+// ---- Sharing with a therapist (patient side)
+/** The patient's state with one therapist. A WhatsApp tap (contactedAt) grants no access; sharing does. */
+export interface SharingState {
+  contactedAt: string | null;
+  sharedAt: string | null;
+  sharing: boolean;
+}
+
+export interface TherapistConnection {
+  therapistProfileId: string;
+  name: string;
+  specializations: string[];
+  photoUrl: string | null;
+  contactedAt: string | null;
+  sharedAt: string | null;
 }

@@ -5,14 +5,16 @@ import { Pressable, View } from 'react-native';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Chip } from '@/components/ui/controls';
-import { IconBubble } from '@/components/ui/feedback';
+import { IconBubble, SupportBanner } from '@/components/ui/feedback';
 import { TextField } from '@/components/ui/TextField';
 import { Text } from '@/components/ui/Text';
 import { useLogMood } from '@/hooks/mood';
 import { cn } from '@/lib/cn';
 import { getErrorMessage } from '@/lib/errors';
 import { emotions, moodOrder } from '@/theme/tokens';
-import type { EmotionLabel } from '@/types';
+import { toneMessage } from '@/lib/checkin';
+import { useTour } from '@/tour/TourProvider';
+import type { EmotionLabel, MoodLog } from '@/types';
 
 /** 1-10 as ten soft dots: less clinical than a slider, and easy to tap. */
 export function IntensityDots({ value, onChange }: { value: number; onChange: (n: number) => void }) {
@@ -33,9 +35,35 @@ export function IntensityDots({ value, onChange }: { value: number; onChange: (n
   );
 }
 
+/** After saving: exactly what was logged, so the person can see their check-in as recorded. */
+function CheckInSummary({ log, onAgain }: { log: MoodLog; onAgain: () => void }) {
+  const tone = toneMessage(log);
+  return (
+    <Card tone="surface" className="gap-4 py-6">
+      <View className="flex-row items-center gap-3">
+        <IconBubble icon={CircleCheck} tone="sage" size={48} />
+        <View className="flex-1 gap-0.5">
+          <Text variant="heading">Thank you for checking in</Text>
+          <Text variant="small">Your week view has been updated.</Text>
+        </View>
+      </View>
+      <View className="gap-2 rounded-2xl bg-sunken p-4">
+        <Text variant="label">YOUR CHECK-IN</Text>
+        <Text variant="bodyStrong">
+          {emotions[log.mood].label} · {log.intensity}/10
+        </Text>
+        {log.note ? <Text variant="body" className="text-ink-soft">{`“${log.note}”`}</Text> : null}
+        {tone ? <Text variant="small">{tone}</Text> : null}
+      </View>
+      <Button title="Check in again" variant="soft" compact onPress={onAgain} />
+    </Card>
+  );
+}
+
 /** A small, forgiving check-in: how do you feel, how strongly, anything to add. */
 export function MoodCheckIn() {
   const log = useLogMood();
+  const tour = useTour();
   const [mood, setMood] = useState<EmotionLabel | null>(null);
   const [intensity, setIntensity] = useState(5);
   const [note, setNote] = useState('');
@@ -47,18 +75,17 @@ export function MoodCheckIn() {
     setNote('');
   };
 
-  if (log.isSuccess) {
+  // The note matched the crisis check (whatever mood was picked): offer support first, gently.
+  if (log.isSuccess && log.data.isCrisis) {
     return (
-      <Card tone="surface" className="items-center gap-3 py-8">
-        <IconBubble icon={CircleCheck} tone="sage" size={56} />
-        <Text variant="heading">Thank you for checking in</Text>
-        <Text variant="small" className="text-center">
-          Noticing how you feel is a good thing to do. Your week view has been updated.
-        </Text>
-        <Button title="Check in again" variant="soft" compact onPress={reset} />
-      </Card>
+      <View className="gap-3">
+        <SupportBanner title="Thank you for telling us" message={log.data.crisisSupport} />
+        <Button title="Back to check-in" variant="ghost" compact onPress={reset} />
+      </View>
     );
   }
+
+  if (log.isSuccess) return <CheckInSummary log={log.data} onAgain={reset} />;
 
   return (
     <Card className="gap-5">
@@ -88,7 +115,13 @@ export function MoodCheckIn() {
           <Button
             title="Save check-in"
             loading={log.isPending}
-            onPress={() => log.mutate({ mood, intensity, note: note.trim() || undefined })}
+            onPress={() =>
+              log.mutate(
+                { mood, intensity, note: note.trim() || undefined },
+                // The guided tour moves on after a first check-in, but never over crisis support.
+                { onSuccess: (saved) => !saved.isCrisis && tour.notify('checkin') },
+              )
+            }
           />
         </View>
       ) : null}

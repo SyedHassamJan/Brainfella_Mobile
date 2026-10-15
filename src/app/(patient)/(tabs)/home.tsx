@@ -15,6 +15,7 @@ import { Text } from '@/components/ui/Text';
 import { useAuth } from '@/hooks/auth';
 import { useAppointments } from '@/hooks/care';
 import { firstName, formatDateTime, greeting, isUpcoming } from '@/lib/format';
+import { TourTarget } from '@/tour/TourTarget';
 
 function QuickAction({ icon, label, onPress, tone }: { icon: typeof Calendar; label: string; onPress: () => void; tone: 'primary' | 'lavender' | 'peach' }) {
   return (
@@ -47,7 +48,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <Screen tabBarSpace refreshing={refreshing} onRefresh={refresh}>
+    <Screen ambient="lake" tabBarSpace refreshing={refreshing} onRefresh={refresh}>
       <Reveal index={0}>
         <View className="gap-1.5 pt-2">
           <Text variant="small">{greeting()}</Text>
@@ -63,11 +64,15 @@ export default function HomeScreen() {
       </Reveal>
 
       <Reveal index={2}>
-        <MoodCheckIn />
+        <TourTarget id="home.checkin">
+          <MoodCheckIn />
+        </TourTarget>
       </Reveal>
 
       <Reveal index={3}>
-        <WeekInsights />
+        <TourTarget id="home.week">
+          <WeekInsights />
+        </TourTarget>
       </Reveal>
 
       <Reveal index={4}>

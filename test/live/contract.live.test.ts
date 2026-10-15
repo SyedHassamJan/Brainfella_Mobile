@@ -23,7 +23,7 @@ suite('live API contract (the same client the app uses)', () => {
   let access: string | null = null;
   let refresh: string | null = null;
   const expired = jest.fn();
-  const email = `smoketest-mobile+${Date.now()}@example.com`;
+  const email = `smoketest-mobile+${Date.now()}@gmail.com`;
   const password = 'Smoke#12345';
 
   const api = createApiClient({

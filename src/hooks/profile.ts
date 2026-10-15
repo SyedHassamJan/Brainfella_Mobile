@@ -33,3 +33,12 @@ export function useSetGuardian() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: profileKeys.me }),
   });
 }
+
+/** Marks the guided tour as finished (or skipped) on the account, so it never repeats. */
+export function useCompleteOnboarding() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => (await api.post<{ onboardingCompletedAt: string }>('/user/onboarding/complete')).data,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: profileKeys.me }),
+  });
+}

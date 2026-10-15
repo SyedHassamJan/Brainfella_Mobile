@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
@@ -13,6 +14,7 @@ const PHASE_MS = 4000;
  * 4-second in / 4-second out rhythm. It never asks anything of the person.
  */
 export function BreathePrompt() {
+  const router = useRouter();
   const reduce = useReducedMotion();
   const [inhale, setInhale] = useState(true);
 
@@ -23,7 +25,7 @@ export function BreathePrompt() {
   }, [reduce]);
 
   return (
-    <Card tone="primary">
+    <Card tone="primary" onPress={() => router.push('/breathe')} accessibilityLabel="Open the breathing space">
       <View className="flex-row items-center gap-5">
         <BreathingOrb size={84} />
         <View className="flex-1 gap-1.5">
@@ -31,7 +33,7 @@ export function BreathePrompt() {
             TAKE A MOMENT
           </Text>
           <Text variant="heading">{reduce ? 'Breathe slowly' : inhale ? 'Breathe in…' : 'Breathe out…'}</Text>
-          <Text variant="small">Let your shoulders drop. There is nothing to do right now.</Text>
+          <Text variant="small">Let your shoulders drop. Tap to breathe together, whenever you’re ready.</Text>
         </View>
       </View>
     </Card>

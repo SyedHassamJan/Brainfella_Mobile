@@ -29,14 +29,18 @@ export default function TabsLayout() {
           paddingTop: 8,
           paddingBottom: 8,
           borderRadius: 34,
-          borderTopWidth: 0,
+          borderTopWidth: 1,
+          borderTopColor: colors.line,
           backgroundColor: colors.surface,
           shadowColor: '#2b4a45',
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.1,
-          shadowRadius: 20,
-          elevation: 6,
+          shadowOffset: { width: 0, height: 10 },
+          shadowOpacity: 0.14,
+          shadowRadius: 24,
+          elevation: 8,
         },
+        // The selected tab rests in a soft pill, so where you are is clear at a glance.
+        tabBarItemStyle: { borderRadius: 26, marginHorizontal: 3, marginVertical: 1 },
+        tabBarActiveBackgroundColor: colors.primarySoft,
         sceneStyle: { backgroundColor: colors.canvas },
       }}>
       <Tabs.Screen
