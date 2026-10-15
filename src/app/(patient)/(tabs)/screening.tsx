@@ -15,6 +15,7 @@ import { useScreeningHistory } from '@/hooks/screening';
 import { formatDate } from '@/lib/format';
 import { useAppTheme } from '@/theme/ThemeProvider';
 import { riskLevel } from '@/theme/tokens';
+import { TourTarget } from '@/tour/TourTarget';
 
 function InputCard({ icon, title, subtitle, tone, onPress }: { icon: typeof Camera; title: string; subtitle: string; tone: 'primary' | 'lavender' | 'peach'; onPress: () => void }) {
   return (
@@ -74,9 +75,15 @@ export default function ScreeningHubScreen() {
 
       <Reveal index={4}>
         <View className="flex-row gap-3">
-          <InputCard icon={ClipboardList} title="Questionnaire" subtitle="A few minutes" tone="primary" onPress={() => router.push('/screening/questionnaire/index')} />
-          <InputCard icon={Camera} title="Camera" subtitle="One photo" tone="lavender" onPress={() => router.push('/screening/camera')} />
-          <InputCard icon={Mic} title="Voice" subtitle="A short clip" tone="peach" onPress={() => router.push('/screening/voice')} />
+          <TourTarget id="screening.questionnaire" style={{ flex: 1 }}>
+            <InputCard icon={ClipboardList} title="Questionnaire" subtitle="A few minutes" tone="primary" onPress={() => router.push('/screening/questionnaire')} />
+          </TourTarget>
+          <TourTarget id="screening.camera" style={{ flex: 1 }}>
+            <InputCard icon={Camera} title="Camera" subtitle="One photo" tone="lavender" onPress={() => router.push('/screening/camera')} />
+          </TourTarget>
+          <TourTarget id="screening.voice" style={{ flex: 1 }}>
+            <InputCard icon={Mic} title="Voice" subtitle="A short clip" tone="peach" onPress={() => router.push('/screening/voice')} />
+          </TourTarget>
         </View>
       </Reveal>
 
@@ -91,7 +98,9 @@ export default function ScreeningHubScreen() {
       </Reveal>
 
       <Reveal index={7}>
-        <Button title="Get my risk indicator" onPress={() => router.push('/screening/results')} />
+        <TourTarget id="screening.results">
+          <Button title="Get my risk indicator" onPress={() => router.push('/screening/results')} />
+        </TourTarget>
       </Reveal>
 
       <Reveal index={8}>

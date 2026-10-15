@@ -13,9 +13,12 @@ import { Stars } from '@/components/ui/pickers';
 import { Screen } from '@/components/ui/Screen';
 import { TextField } from '@/components/ui/TextField';
 import { Text } from '@/components/ui/Text';
+import { ShareRecordsCard } from '@/components/care/ShareRecordsCard';
+import { WhatsappButton } from '@/components/care/WhatsappButton';
 import { useSubmitReview, useTherapist } from '@/hooks/care';
 import { getErrorMessage } from '@/lib/errors';
 import { formatDate } from '@/lib/format';
+import { absoluteApiUrl } from '@/lib/whatsapp';
 
 function ReviewForm({ profileId }: { profileId: string }) {
   const submit = useSubmitReview(profileId);
@@ -73,7 +76,7 @@ export default function TherapistDetailScreen() {
 
         <Reveal index={0}>
           <Card className="items-center gap-3 py-6">
-            <Avatar name={t.user.name} size={76} />
+            <Avatar name={t.user.name} size={76} uri={absoluteApiUrl(t.photoUrl)} />
             <View className="flex-row items-center gap-2">
               <Stars value={t.rating ?? 0} size={17} />
               <Text variant="small">{t.totalReviews > 0 ? `${(t.rating ?? 0).toFixed(1)} · ${t.totalReviews} review${t.totalReviews === 1 ? '' : 's'}` : 'No reviews yet'}</Text>
@@ -83,6 +86,7 @@ export default function TherapistDetailScreen() {
                 {t.specializations.map((s) => <Badge key={s} label={s} tone="lavender" />)}
               </View>
             ) : null}
+            <WhatsappButton number={t.whatsappNumber} name={t.user.name} profileId={t.id} compact />
           </Card>
         </Reveal>
 
@@ -119,6 +123,8 @@ export default function TherapistDetailScreen() {
             </View>
           </Card>
         </Reveal>
+
+        <ShareRecordsCard profileId={t.id} name={t.user.name} />
 
         <ReviewForm profileId={t.id} />
 

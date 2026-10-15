@@ -9,6 +9,9 @@ import { Stars } from '@/components/ui/pickers';
 import { Text } from '@/components/ui/Text';
 import { useTherapists } from '@/hooks/care';
 import { getErrorMessage } from '@/lib/errors';
+import { absoluteApiUrl } from '@/lib/whatsapp';
+
+import { WhatsappButton } from './WhatsappButton';
 
 export function TherapistsList() {
   const router = useRouter();
@@ -24,7 +27,7 @@ export function TherapistsList() {
       {q.data.map((t) => (
         <Card key={t.id} onPress={() => router.push(`/therapist/${t.id}`)} className="gap-3">
           <View className="flex-row items-center gap-3">
-            <Avatar name={t.user.name} size={52} />
+            <Avatar name={t.user.name} size={52} uri={absoluteApiUrl(t.photoUrl)} />
             <View className="flex-1 gap-1">
               <Text variant="bodyStrong">{t.user.name}</Text>
               <View className="flex-row items-center gap-2">
@@ -46,6 +49,7 @@ export function TherapistsList() {
             {t.experienceYears > 0 ? `${t.experienceYears} years of experience` : 'Verified therapist'}
             {t.consultationFee ? ` · PKR ${t.consultationFee.toLocaleString()}` : ''}
           </Text>
+          <WhatsappButton number={t.whatsappNumber} name={t.user.name} profileId={t.id} compact />
         </Card>
       ))}
     </View>

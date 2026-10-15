@@ -65,3 +65,18 @@ describe('format helpers', () => {
     expect(snippet('x'.repeat(200), 10)).toBe('xxxxxxxxxx…');
   });
 });
+
+import { resolveApiUrl } from '../config';
+
+describe('resolveApiUrl', () => {
+  it('in development, follows the address the phone used to reach Metro (Wi-Fi or hotspot)', () => {
+    expect(resolveApiUrl({ dev: true, hostUri: '192.168.100.20:8081', envUrl: 'http://192.168.137.1:8001' })).toBe('http://192.168.100.20:8001');
+    expect(resolveApiUrl({ dev: true, hostUri: '192.168.137.1:8081' })).toBe('http://192.168.137.1:8001');
+  });
+
+  it('uses EXPO_PUBLIC_API_URL for production builds, tunnels, or an unknown host', () => {
+    expect(resolveApiUrl({ dev: false, hostUri: '192.168.100.20:8081', envUrl: 'https://api.example.org/' })).toBe('https://api.example.org');
+    expect(resolveApiUrl({ dev: true, hostUri: 'abc-anonymous-8081.exp.direct', envUrl: 'http://10.0.0.5:8001' })).toBe('http://10.0.0.5:8001');
+    expect(resolveApiUrl({ dev: true, hostUri: null })).toBe('http://localhost:8001');
+  });
+});

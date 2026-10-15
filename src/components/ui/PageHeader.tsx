@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { useAppTheme } from '@/theme/ThemeProvider';
+import { softShadow } from '@/theme/tokens';
 
 import { Text } from './Text';
 
@@ -32,7 +33,8 @@ export function PageHeader({
           accessibilityLabel="Go back"
           hitSlop={10}
           onPress={() => router.back()}
-          className="h-11 w-11 items-center justify-center rounded-full bg-surface border border-line">
+          className="h-11 w-11 items-center justify-center rounded-full bg-surface border border-line"
+          style={softShadow}>
           <ChevronLeft size={22} color={colors.inkSoft} strokeWidth={1.7} />
         </Pressable>
       ) : null}

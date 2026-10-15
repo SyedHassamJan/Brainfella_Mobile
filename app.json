@@ -49,7 +49,8 @@
         {
           "microphonePermission": "BrainHealth uses your microphone only for a voice screening recording you choose to make. The recording is sent once for analysis and is never saved."
         }
-      ]
+      ],
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true,

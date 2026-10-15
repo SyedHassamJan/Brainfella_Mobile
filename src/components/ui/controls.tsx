@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 
@@ -87,7 +88,19 @@ export function SegmentedControl<T extends string>({
   );
 }
 
-export function Avatar({ name, size = 48 }: { name: string; size?: number }) {
+/** A round photo when `uri` is given, otherwise soft initials. */
+export function Avatar({ name, size = 48, uri }: { name: string; size?: number; uri?: string | null }) {
+  if (uri) {
+    return (
+      <Image
+        source={{ uri }}
+        accessibilityLabel={`Photo of ${name}`}
+        contentFit="cover"
+        transition={250}
+        style={{ width: size, height: size, borderRadius: size / 2 }}
+      />
+    );
+  }
   const initials = name
     .split(/\s+/)
     .filter(Boolean)

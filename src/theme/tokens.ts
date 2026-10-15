@@ -94,6 +94,15 @@ export const softShadow = {
   elevation: 2,
 } as const;
 
+/** A faint coloured halo under the main action, so it feels lit from within rather than stamped on. */
+export const glowShadow = {
+  shadowColor: '#467f76',
+  shadowOffset: { width: 0, height: 8 },
+  shadowOpacity: 0.28,
+  shadowRadius: 16,
+  elevation: 4,
+} as const;
+
 export const emotions: Record<EmotionLabel, { label: string; tint: string }> = {
   joy: { label: 'Joyful', tint: '#f6e3a6' },
   neutral: { label: 'Calm', tint: '#d5e3e0' },

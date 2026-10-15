@@ -49,7 +49,7 @@ suite('live screening contract (the same client the mobile app uses)', () => {
   let access: string | null = null;
   let refresh: string | null = null;
   let mlAvailable = false;
-  const email = `smoketest-mobile+screening-${Date.now()}@example.com`;
+  const email = `smoketest-mobile+screening-${Date.now()}@gmail.com`;
   const password = 'Smoke#12345';
 
   const api = createApiClient({
@@ -175,7 +175,7 @@ suite('live screening contract (the same client the mobile app uses)', () => {
   });
 
   it('assess: with no fresh input (a brand-new user) is a readable 422, matching the results screen empty state', async () => {
-    const freshEmail = `smoketest-mobile+screening-empty-${Date.now()}@example.com`;
+    const freshEmail = `smoketest-mobile+screening-empty-${Date.now()}@gmail.com`;
     let freshAccess: string | null = null;
     let freshRefresh: string | null = null;
     const fresh = createApiClient({

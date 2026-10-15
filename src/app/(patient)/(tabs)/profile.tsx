@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
-import { Bell, ChevronRight, HeartHandshake, LogOut, Phone, UserPen, Users } from 'lucide-react-native';
+import { Bell, ChevronRight, Compass, HeartHandshake, LogOut, Phone, UserPen, Users } from 'lucide-react-native';
 import type { ComponentType } from 'react';
 import { Alert, Linking, View } from 'react-native';
 
@@ -16,6 +16,8 @@ import { useUnreadCount } from '@/hooks/notifications';
 import { useProfile } from '@/hooks/profile';
 import { HELPLINE } from '@/lib/config';
 import { useAppTheme } from '@/theme/ThemeProvider';
+import { useTour } from '@/tour/TourProvider';
+import { TourTarget } from '@/tour/TourTarget';
 
 type IconType = ComponentType<{ size?: number; color?: string; strokeWidth?: number }>;
 
@@ -35,6 +37,7 @@ function Row({ icon, label, detail, onPress, tone = 'primary' }: { icon: IconTyp
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const tour = useTour();
   const { colors } = useAppTheme();
   const { user } = useAuth();
   const profile = useProfile();
@@ -62,14 +65,17 @@ export default function ProfileScreen() {
       </Reveal>
 
       <Reveal index={1}>
+        <TourTarget id="profile.settings">
         <View className="gap-3">
           <Row icon={UserPen} label="Your details" detail="Name, phone and a little about you" onPress={() => router.push('/profile-edit')} />
           <Row icon={Users} tone="lavender" label="Guardian" detail={guardian ? `Weekly summary goes to ${guardian.guardianName || guardian.guardianEmail}` : 'Someone you trust who can receive a weekly summary'} onPress={() => router.push('/guardian')} />
           <Row icon={Bell} tone="peach" label="Notifications" detail={unread > 0 ? `${unread} new` : 'You are all caught up'} onPress={() => router.push('/notifications')} />
         </View>
+        </TourTarget>
       </Reveal>
 
       <Reveal index={2}>
+        <TourTarget id="profile.help">
         <Card tone="support" className="gap-3">
           <View className="flex-row items-center gap-3">
             <IconBubble icon={HeartHandshake} tone="peach" />
@@ -85,10 +91,12 @@ export default function ProfileScreen() {
             onPress={() => Linking.openURL(`tel:${HELPLINE.number.replace(/\D/g, '')}`)}
           />
         </Card>
+        </TourTarget>
       </Reveal>
 
       <Reveal index={3}>
         <View className="gap-4">
+          <Row icon={Compass} tone="lavender" label="Replay the guided tour" detail="A short walk through the app" onPress={tour.restart} />
           <Divider />
           <Button title="Sign out" variant="ghost" loading={signOut.isPending} onPress={confirmSignOut} icon={<LogOut size={18} color={colors.inkSoft} strokeWidth={1.7} />} />
           <Text variant="small" className="text-center">

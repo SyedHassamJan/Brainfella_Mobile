@@ -11,11 +11,13 @@ import { Reveal } from '@/components/ui/motion';
 import { Screen } from '@/components/ui/Screen';
 import { Text } from '@/components/ui/Text';
 import { useCreateJournal } from '@/hooks/journal';
+import { useTour } from '@/tour/TourProvider';
 import { getErrorMessage } from '@/lib/errors';
 
 export default function NewJournalScreen() {
   const router = useRouter();
   const create = useCreateJournal();
+  const tour = useTour();
   const saved = create.data;
 
   // After saving: an entry the app flagged as a crisis is NEVER just closed away.
@@ -60,7 +62,12 @@ export default function NewJournalScreen() {
             submitLabel="Save entry"
             submitting={create.isPending}
             error={create.isError ? getErrorMessage(create.error) : undefined}
-            onSubmit={(v) => create.mutate({ title: v.title?.trim() || undefined, content: v.content.trim() })}
+            onSubmit={(v) =>
+              create.mutate(
+                { title: v.title?.trim() || undefined, content: v.content.trim() },
+                { onSuccess: (entry) => !entry.isCrisis && tour.notify('journal') },
+              )
+            }
           />
         </Card>
       </View>

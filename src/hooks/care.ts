@@ -8,6 +8,8 @@ import type {
   ExerciseCompletion,
   TherapistDetail,
   TherapistListItem,
+  SharingState,
+  TherapistConnection,
   TherapistReview,
 } from '@/types';
 
@@ -108,5 +110,33 @@ export function useCompleteExercise(id: string) {
     mutationFn: async (input: { feedback?: string; rating?: number }) =>
       (await api.post<ExerciseCompletion>(`/cbt/${id}/complete`, input)).data,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: cbtKeys.completions() }),
+  });
+}
+
+// ---- Contact and record sharing (by therapist PROFILE id)
+export const connectionKeys = { mine: ['therapist-connections', 'mine'] as const };
+
+/** The therapists this patient has contacted or shares records with. */
+export function useMyConnections() {
+  return useQuery({
+    queryKey: connectionKeys.mine,
+    queryFn: async () => (await api.get<TherapistConnection[]>('/therapist/connections/me')).data,
+  });
+}
+
+/** Records a WhatsApp tap so the therapist knows who reached out. Grants no access to records. */
+export function useRecordContact() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (profileId: string) => (await api.post<SharingState>(`/therapist/${profileId}/contact`)).data,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: connectionKeys.mine }),
+  });
+}
+
+export function useSetSharing(profileId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (share: boolean) => (await api.put<SharingState>(`/therapist/${profileId}/share`, { share })).data,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: connectionKeys.mine }),
   });
 }
